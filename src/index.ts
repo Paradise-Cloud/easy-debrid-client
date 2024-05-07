@@ -1,4 +1,5 @@
 export interface EasyDebridOptions {
+  apiUrl: string;
   clientId: string;
   clientSecret: string;
 }
