@@ -1,7 +1,7 @@
-import { EasyDebridClient } from './client'
-import { EasyDebridOauth2Client } from './oauth2'
+import * as Client from './client'
+import * as Oauth2 from './oauth2'
 
 export {
-  EasyDebridClient,
-  EasyDebridOauth2Client
+  Client,
+  Oauth2
 }

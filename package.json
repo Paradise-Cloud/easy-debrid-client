@@ -7,7 +7,7 @@
     "dev": "tsup ./src --watch",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --fix",
-    "build": "tsup ./src"
+    "build": "tsup ./src/index.ts"
   },
   "files": [
     "dist",
