@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { EasyDebridClient } from "./easyDebridClient";
 
 export interface EasyDebridOptions {
   apiUrl: string;
@@ -8,7 +9,14 @@ export interface EasyDebridOptions {
 
 export class EasyDebrid {
   private apiClient: AxiosInstance;
+  public easyDebridClient: EasyDebridClient;
   constructor(private readonly options: EasyDebridOptions) {
+
+    
+    this.options.apiUrl = process.env.API_URL!;
+    this.options.clientId = process.env.CLIENT_ID!;
+    this.options.clientSecret = process.env.CLIENT_SECRET!;
+    
     if (!options.apiUrl) {
       throw new Error("apiUrl is required");
     }
@@ -27,5 +35,16 @@ export class EasyDebrid {
         "Content-Type": "application/json",
       },
     });
+
+
+    const PKCE = this.options.clientSecret;
+    const apiClient = this.apiClient;
+    const clientId = this.options.clientId;
+
+    this.easyDebridClient = new EasyDebridClient(
+      clientId,
+      PKCE,
+      apiClient,
+    );
   }
 }
