@@ -37,21 +37,20 @@ export class EasyDebridOauth2Client {
       params.append("scope", scopes.join(" "));
     }
 
-    return `${this.apiUrl}/oauth2/authorize?${params.toString()}`;
+    return `${this.apiUrl}/oauth/authorize?${params.toString()}`;
   }
 
-  async exchangeCodeForToken(code: string, redirectUri: string) {
+  async exchangeCodeForToken(code: string) {
     const params = new URLSearchParams();
 
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", redirectUri);
 
     if (this.options.clientSecret) {
       params.append("client_secret", this.options.clientSecret);
     }
 
-    const { data } = await this.apiClient.post("/oauth2/token", params, {
+    const { data } = await this.apiClient.post("/oauth/token", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
