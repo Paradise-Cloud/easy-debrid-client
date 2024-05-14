@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
+  "private": false,
   "scripts": {
     "dev": "tsup ./src --watch",
     "lint": "eslint . --ext .ts",
