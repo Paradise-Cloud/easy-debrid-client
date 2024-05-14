@@ -59,7 +59,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      toEasyDebridError(error);
+      return toEasyDebridError(error);
     }
   }
 
@@ -72,7 +72,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      toEasyDebridError(error);
+      return toEasyDebridError(error);
     }
   }
 
@@ -84,7 +84,7 @@ export class EasyDebridClient {
       );
       return data;
     } catch (error) {
-      toEasyDebridError(error);
+      return toEasyDebridError(error);
     }
   }
 
@@ -97,7 +97,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      toEasyDebridError(error);
+      return toEasyDebridError(error);
     }
   }
 }

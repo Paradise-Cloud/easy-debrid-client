@@ -1,14 +1,15 @@
 {
   "name": "@paradise-cloud/easy-debrid",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "./dist/index.js",
   "private": false,
   "scripts": {
-    "dev": "tsup ./src --watch",
+    "dev": "tsup --watch",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --fix",
-    "build": "tsup"
+    "build": "tsup",
+    "playground": "ts-node ./src/playground.ts"
   },
   "files": [
     "dist",

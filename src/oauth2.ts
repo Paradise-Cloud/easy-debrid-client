@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { toEasyDebridError } from "./errors";
 
 export interface EasyDebridOauth2Options {
   clientId: string;
@@ -6,14 +7,26 @@ export interface EasyDebridOauth2Options {
   env?: "production" | "sandbox";
 }
 
-export class EasyDebridOauth2Client {
-  private apiClient: AxiosInstance;
-  private apiUrl: string;
+export interface Oauth2TokenResponse {
+  token_type: string;
+  expires_in: number;
+  access_token: string;
+  scope: string;
+}
 
+export const VALID_SCOPES = ["full"] as const;
+export type EasyDebridScope = (typeof VALID_SCOPES)[number];
+
+export class EasyDebridOauth2Client {
+  private readonly apiClient: AxiosInstance;
+  private readonly apiUrl: string;
 
   constructor(private readonly options: EasyDebridOauth2Options) {
     options.env = options.env || "production";
-    this.apiUrl = options.env === "production" ? "https://api.easydebrid.com" : "https://dev.easydebrid.com";
+    this.apiUrl =
+      options.env === "production"
+        ? "https://api.easydebrid.com"
+        : "https://dev.easydebrid.com";
     this.apiClient = axios.create({
       baseURL: this.apiUrl,
       headers: {
@@ -22,7 +35,11 @@ export class EasyDebridOauth2Client {
     });
   }
 
-  generateAuthorizationUrl(redirectUri: string, state?: string, scopes?: string[]) {
+  generateAuthorizationUrl(
+    redirectUri: string,
+    state?: string,
+    scopes?: EasyDebridScope[],
+  ) {
     const params = new URLSearchParams();
 
     params.append("response_type", "code");
@@ -40,22 +57,34 @@ export class EasyDebridOauth2Client {
     return `${this.apiUrl}/oauth/authorize?${params.toString()}`;
   }
 
-  async exchangeCodeForToken(code: string) {
+  async exchangeCodeForToken(
+    code: string,
+    redirectUri: string,
+  ): Promise<Oauth2TokenResponse> {
     const params = new URLSearchParams();
 
     params.append("grant_type", "authorization_code");
     params.append("code", code);
+    params.append("redirect_uri", redirectUri);
 
     if (this.options.clientSecret) {
       params.append("client_secret", this.options.clientSecret);
     }
 
-    const { data } = await this.apiClient.post("/oauth/token", params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
+    try {
+      const { data } = await this.apiClient.post<Oauth2TokenResponse>(
+        "/oauth/token",
+        params,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
 
-    return data;
+      return data;
+    } catch (error) {
+      return toEasyDebridError(error);
+    }
   }
 }
