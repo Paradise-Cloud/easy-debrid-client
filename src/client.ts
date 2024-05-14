@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, isAxiosError } from "axios";
-import { EasyDebridError } from "./errors";
+import { EasyDebridError, toEasyDebridError } from "./errors";
 
 export interface EasyDebridGetUserDetailsResponse {
   id: string;
@@ -59,17 +59,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      if (isAxiosError(error)) {
-        throw new EasyDebridError(
-          error.response?.data.message || error.message,
-        );
-      }
-
-      if (error instanceof Error) {
-        throw new EasyDebridError(error.message);
-      }
-
-      throw new EasyDebridError("An unknown error occurred");
+      toEasyDebridError(error);
     }
   }
 
@@ -82,17 +72,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      if (isAxiosError(error)) {
-        throw new EasyDebridError(
-          error.response?.data.message || error.message,
-        );
-      }
-
-      if (error instanceof Error) {
-        throw new EasyDebridError(error.message);
-      }
-
-      throw new EasyDebridError("An unknown error occurred");
+      toEasyDebridError(error);
     }
   }
 
@@ -104,17 +84,7 @@ export class EasyDebridClient {
       );
       return data;
     } catch (error) {
-      if (isAxiosError(error)) {
-        throw new EasyDebridError(
-          error.response?.data.message || error.message,
-        );
-      }
-
-      if (error instanceof Error) {
-        throw new EasyDebridError(error.message);
-      }
-
-      throw new EasyDebridError("An unknown error occurred");
+      toEasyDebridError(error);
     }
   }
 
@@ -127,17 +97,7 @@ export class EasyDebridClient {
         );
       return data;
     } catch (error) {
-      if (isAxiosError(error)) {
-        throw new EasyDebridError(
-          error.response?.data.message || error.message,
-        );
-      }
-
-      if (error instanceof Error) {
-        throw new EasyDebridError(error.message);
-      }
-
-      throw new EasyDebridError("An unknown error occurred");
+      toEasyDebridError(error);
     }
   }
 }
