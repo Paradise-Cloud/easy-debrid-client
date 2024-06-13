@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "dev": "tsup --watch",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsup",
     "playground": "ts-node ./src/playground.ts"
