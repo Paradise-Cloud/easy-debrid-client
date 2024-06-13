@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, isAxiosError } from "axios";
-import { EasyDebridError, toEasyDebridError } from "./errors";
+import axios, { AxiosInstance } from "axios";
+import { toEasyDebridError } from "./errors";
 
 export interface EasyDebridGetUserDetailsResponse {
   id: string;
