@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { toEasyDebridError } from "./errors";
+import { getHost } from "./utils";
 
 export interface EasyDebridOauth2Options {
   clientId: string;
@@ -19,16 +20,13 @@ export type EasyDebridScope = (typeof VALID_SCOPES)[number];
 
 export class EasyDebridOauth2Client {
   private readonly apiClient: AxiosInstance;
-  private readonly apiUrl: string;
+  private readonly serviceUrl: string;
 
   constructor(private readonly options: EasyDebridOauth2Options) {
     options.env = options.env || "production";
-    this.apiUrl =
-      options.env === "production"
-        ? "https://api.easydebrid.com"
-        : "https://dev.easydebrid.com";
+    this.serviceUrl = getHost(options.env);
     this.apiClient = axios.create({
-      baseURL: this.apiUrl,
+      baseURL: this.serviceUrl,
       headers: {
         "Content-Type": "application/json",
       },
@@ -54,7 +52,7 @@ export class EasyDebridOauth2Client {
       params.append("scope", scopes.join(" "));
     }
 
-    return `${this.apiUrl}/oauth/authorize?${params.toString()}`;
+    return `${this.serviceUrl}/oauth/authorize?${params.toString()}`;
   }
 
   async exchangeCodeForToken(

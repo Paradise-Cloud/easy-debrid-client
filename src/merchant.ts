@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { toEasyDebridError } from "./errors";
+import { getApiUrl } from "./utils";
 
 export interface EasyDebridGetResellerPricesResponse {
   prices: Price[];
@@ -42,10 +43,7 @@ export class EasyDebridMerchant {
   private apiClient: AxiosInstance;
   constructor(private readonly options: EasyDebridMerchantOptions) {
     options.env = options.env || "production";
-    const baseUrl =
-      options.env === "production"
-        ? "https://api.easydebrid.com/api/v1"
-        : "https://dev.easydebrid.com/api/v1";
+    const baseUrl = getApiUrl(options.env);
     this.apiClient = axios.create({
       baseURL: baseUrl,
       headers: {

@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { toEasyDebridError } from "./errors";
+import { getApiUrl, getHost } from "./utils";
 
 export interface EasyDebridGetUserDetailsResponse {
   id: string;
@@ -38,10 +39,7 @@ export class EasyDebridClient {
   private apiClient: AxiosInstance;
   constructor(private readonly options: EasyDebridClientOptions) {
     options.env = options.env || "production";
-    const baseUrl =
-      options.env === "production"
-        ? "https://api.easydebrid.com/api/v1"
-        : "https://dev.easydebrid.com/api/v1";
+    const baseUrl = getApiUrl(options.env);
     this.apiClient = axios.create({
       baseURL: baseUrl,
       headers: {
