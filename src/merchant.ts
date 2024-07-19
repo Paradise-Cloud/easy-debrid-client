@@ -20,7 +20,7 @@ export interface EasyDebridGetResellerBalanceResponse {
 }
 
 export interface EasyDebridGenerateResellerCouponResponse {
-  days: number;
+  coupon: string;
 }
 
 export interface EasyDebridListResellerCouponsResponse {
@@ -107,7 +107,7 @@ export class EasyDebridMerchant {
     try {
       const { data } =
         await this.apiClient.get<EasyDebridListResellerCouponsResponse>(
-          "/reseller/prices",
+          "/reseller/coupons",
         );
       return data;
     } catch (error) {
