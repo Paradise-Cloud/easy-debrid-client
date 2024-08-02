@@ -35,7 +35,7 @@ export interface Coupon {
 }
 
 export interface EasyDebridMerchantOptions {
-  accessToken?: string;
+  apiKey?: string;
   env?: "production" | "sandbox";
 }
 
@@ -48,7 +48,7 @@ export class EasyDebridMerchant {
       baseURL: baseUrl,
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${this.options.accessToken}`,
+        authorization: `Bearer ${this.options.apiKey}`,
       },
     });
   }
