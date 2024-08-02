@@ -8,7 +8,7 @@ export interface EasyDebridGetUserDetailsResponse {
 }
 
 export interface EasyDebridCouponSubmitResponse {
-  result: string;
+  success: boolean;
 }
 
 export interface EasyDebridLinkLookupResponse {
