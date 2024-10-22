@@ -35,6 +35,8 @@ export class EasyDebridOauth2Client {
 
   generateAuthorizationUrl(
     redirectUri: string,
+    codeChallenge: string,
+    codeChallengeMethod: string,
     state?: string,
     scopes?: EasyDebridScope[],
   ) {
@@ -43,6 +45,8 @@ export class EasyDebridOauth2Client {
     params.append("response_type", "code");
     params.append("client_id", this.options.clientId);
     params.append("redirect_uri", redirectUri);
+    params.append("code_challenge", codeChallenge);
+    params.append("code_challenge_method", codeChallengeMethod);
 
     if (state) {
       params.append("state", state);
@@ -58,12 +62,14 @@ export class EasyDebridOauth2Client {
   async exchangeCodeForToken(
     code: string,
     redirectUri: string,
+    codeVerifier: string,
   ): Promise<Oauth2TokenResponse> {
     const params = new URLSearchParams();
 
     params.append("grant_type", "authorization_code");
     params.append("code", code);
     params.append("redirect_uri", redirectUri);
+    params.append("code_verifier", codeVerifier);
 
     if (this.options.clientSecret) {
       params.append("client_secret", this.options.clientSecret);
