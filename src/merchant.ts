@@ -23,6 +23,17 @@ export interface EasyDebridGenerateResellerCouponResponse {
   coupon: string;
 }
 
+export interface EasyDebridListResellerCouponsResponseAPI {
+  coupons: CouponAPI[];
+}
+
+export interface CouponAPI {
+  coupon: string;
+  days: number;
+  created: string;
+  expires: string;
+}
+
 export interface EasyDebridListResellerCouponsResponse {
   coupons: Coupon[];
 }
@@ -30,8 +41,8 @@ export interface EasyDebridListResellerCouponsResponse {
 export interface Coupon {
   coupon: string;
   days: number;
-  created: string;
-  expires: string;
+  created: Date;
+  expires: Date;
 }
 
 export interface EasyDebridMerchantOptions {
@@ -53,7 +64,7 @@ export class EasyDebridMerchant {
     });
   }
 
-  async getResellerPrices() {
+  async getResellerPrices(): Promise<EasyDebridGetResellerPricesResponse> {
     try {
       const { data } =
         await this.apiClient.get<EasyDebridGetResellerPricesResponse>(
@@ -65,7 +76,7 @@ export class EasyDebridMerchant {
     }
   }
 
-  async topupResellerBalance(amount: number) {
+  async topupResellerBalance(amount: number): Promise<EasyDebridTopupResellerBalanceResponse> {
     try {
       const { data } =
         await this.apiClient.post<EasyDebridTopupResellerBalanceResponse>(
@@ -78,7 +89,7 @@ export class EasyDebridMerchant {
     }
   }
 
-  async getResellerBalance() {
+  async getResellerBalance(): Promise<EasyDebridGetResellerBalanceResponse> {
     try {
       const { data } =
         await this.apiClient.get<EasyDebridGetResellerBalanceResponse>(
@@ -90,7 +101,7 @@ export class EasyDebridMerchant {
     }
   }
 
-  async generateResellerCoupon(days: number) {
+  async generateResellerCoupon(days: number): Promise<EasyDebridGenerateResellerCouponResponse> {
     try {
       const { data } =
         await this.apiClient.post<EasyDebridGenerateResellerCouponResponse>(
@@ -103,13 +114,22 @@ export class EasyDebridMerchant {
     }
   }
 
-  async listResellerCoupons() {
+  async listResellerCoupons(): Promise<EasyDebridListResellerCouponsResponse> {
     try {
       const { data } =
-        await this.apiClient.get<EasyDebridListResellerCouponsResponse>(
+        await this.apiClient.get<EasyDebridListResellerCouponsResponseAPI>(
           "/reseller/coupons",
         );
-      return data;
+
+      const transformedData: EasyDebridListResellerCouponsResponse = {
+        coupons: data.coupons.map((coupon) => ({
+          ...coupon,
+          created: new Date(coupon.created),
+          expires: new Date(coupon.expires),
+        })),
+      };
+
+      return transformedData;
     } catch (error) {
       return toEasyDebridError(error);
     }

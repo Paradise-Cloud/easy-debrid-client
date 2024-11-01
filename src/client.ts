@@ -4,7 +4,12 @@ import { getApiUrl, getHost } from "./utils";
 
 export interface EasyDebridGetUserDetailsResponse {
   id: string;
-  paid_until: string;
+  paid_until: Date;
+}
+
+export interface EasyDebridGetUserDetailsResponseAPI {
+  id: string;
+  paid_until: number;
 }
 
 export interface EasyDebridCouponSubmitResponse {
@@ -20,7 +25,8 @@ export interface EasyDebridGenerateDebridLinkResponse {
 }
 
 export interface File {
-  path: string;
+  filename: string;
+  directory: string[];
   size: number;
   url: string;
 }
@@ -49,19 +55,24 @@ export class EasyDebridClient {
     });
   }
 
-  async getAccountInfo() {
+  async getAccountInfo(): Promise<EasyDebridGetUserDetailsResponse> {
     try {
-      const { data } =
-        await this.apiClient.get<EasyDebridGetUserDetailsResponse>(
-          "/user/details",
-        );
-      return data;
+      const { data } = await this.apiClient.get<EasyDebridGetUserDetailsResponseAPI>(
+        "/user/details",
+      );
+  
+      const transformedData: EasyDebridGetUserDetailsResponse = {
+        ...data,
+        paid_until: new Date(data.paid_until * 1000),
+      };
+  
+      return transformedData;
     } catch (error) {
       return toEasyDebridError(error);
     }
   }
 
-  async submitCoupon(coupon: string) {
+  async submitCoupon(coupon: string): Promise<EasyDebridCouponSubmitResponse> {
     try {
       const { data } =
         await this.apiClient.post<EasyDebridCouponSubmitResponse>(
@@ -74,7 +85,7 @@ export class EasyDebridClient {
     }
   }
 
-  async linkLookup(urls: string[]) {
+  async linkLookup(urls: string[]): Promise<EasyDebridLinkLookupResponse> {
     try {
       const { data } = await this.apiClient.post<EasyDebridLinkLookupResponse>(
         "/link/lookup",
@@ -86,7 +97,7 @@ export class EasyDebridClient {
     }
   }
 
-  async generateDebridLink(url: string) {
+  async generateDebridLink(url: string): Promise<EasyDebridGenerateDebridLinkResponse> {
     try {
       const { data } =
         await this.apiClient.post<EasyDebridGenerateDebridLinkResponse>(
